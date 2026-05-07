@@ -29,15 +29,19 @@ def main():
     """
 
     summary_prompt_template = PromptTemplate(
-        input_variables=["information"],
+        input_variables=["information"], # This is a list of variable names that the prompt template expects to receive as input when it is invoked. In this case, the prompt template expects to receive a variable named "information" that will be used to fill in the placeholder in the template string.
         template=summary_template
     )
 
     # llm = ChatOpenAI(temperature=0, model="gpt-5")
     llm = ChatGroq(model="llama-3.3-70b-versatile")
     # llm = ChatOllama(temperature=0, model="gemma3:270m")
-    chain = summary_prompt_template | llm # LCEL : Langchain expression language
-    response = chain.invoke(input={"information": information})
+    chain = summary_prompt_template | llm # LCEL : Langchain expression language : LCEL chaining syntax that connects components in a pipeline
+
+    # Advantage of using LCEL syntax "|" compred to calling each component seperately ?
+    # It creates reusable, composible pipeline with automatic data flow and error handling.
+
+    response = chain.invoke(input={"information": information}) # It executes the chain by passing the input to the first component and then passing the output of each component to the next one until it reaches the end of the chain, where it returns the final output.
 
     print(response.content)
 
