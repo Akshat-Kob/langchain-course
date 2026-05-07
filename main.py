@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_groq import ChatGroq
+from langchain_ollama import ChatOllama
 
 load_dotenv()
 
@@ -34,6 +35,7 @@ def main():
 
     # llm = ChatOpenAI(temperature=0, model="gpt-5")
     llm = ChatGroq(model="llama-3.3-70b-versatile")
+    llm = ChatOllama(temperature=0, model="gemma3:270m")
     chain = summary_prompt_template | llm # LCEL : Langchain expression language
     response = chain.invoke(input={"information": information})
 
