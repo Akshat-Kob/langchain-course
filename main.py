@@ -8,28 +8,13 @@ from langchain_openai import ChatOpenAI
 from langchain_groq import ChatGroq
 # from langchain_ollama import ChatOllama
 from langchain_google_genai import ChatGoogleGenerativeAI
-from tavily import TavilyClient
-
-tavily = TavilyClient()
-
-
-@tool
-def search(query: str) -> str:
-    """
-    Tool that searches the internet
-    Args:
-        query: The search query.
-    Returns:
-        A string containing the search results.
-    """
-    print(f"Searching for: {query}")
-    return tavily.search(query=query)
+from langchain_tavily import TavilySearch
 
 # llm = ChatGroq(model="llama-3.1-8b-instant")
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash"
 )
-tools = [search]
+tools = [TavilySearch()]
 agent = create_agent(model=llm, tools=tools)
 
 def main():
