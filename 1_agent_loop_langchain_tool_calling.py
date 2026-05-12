@@ -15,7 +15,7 @@ MODEL = "qwen3:1.7b"
 # --- Tools (LangChain @tool decorator) ---
 
 
-@tool
+@tool # it converts a plain python function into a "tool" that can be called by the LLM. It also adds metadata to the function, such as its name, description, and parameters, which the LLM can use to decide when and how to call it.
 def get_product_price(product: str) -> float:
     """Look up the price of a product in the catalog."""
     print(f"    >> Executing get_product_price(product='{product}')")
@@ -43,13 +43,13 @@ def run_agent(question: str):
 
     llm = init_chat_model(f"ollama:{MODEL}", temperature=0)
     # llm = init_chat_model(f"openai:gpt-5", temperature=0)
-    llm_with_tools = llm.bind_tools(tools)
+    llm_with_tools = llm.bind_tools(tools) # bind_tools() : tells the LLM what tools are available - thier names, parameters, and descriptions - so it can decide when and how to call them
 
     print(f"Question: {question}")
     print("=" * 60)
 
     messages = [
-        SystemMessage(
+        SystemMessage(  # provides instructions and behavior guidelines to the LLM. It sets the context for the conversation and helps guide the LLM's responses and tool usage.
             content=(
                 "You are a helpful shopping assistant. "
                 "You have access to a product catalog tool "
@@ -86,6 +86,8 @@ def run_agent(question: str):
         tool_name = tool_call.get("name")
         tool_args = tool_call.get("args", {})
         tool_call_id = tool_call.get("id")
+        # why does ToolMessage reuire a tool_call_id
+        # SO the LLM can match each tool result back to the soecific tool call it requested, especially when multiple tool calls happen
 
         print(f"  [Tool Selected] {tool_name} with args: {tool_args}")
 
